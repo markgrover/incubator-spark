@@ -19,11 +19,12 @@ package org.apache.spark.deploy.worker
 
 import org.apache.spark.util.{Utils, IntParam, MemoryParam}
 import java.lang.management.ManagementFactory
+import org.apache.spark.Logging
 
 /**
  * Command-line parser for the master.
  */
-private[spark] class WorkerArguments(args: Array[String]) {
+private[spark] class WorkerArguments(args: Array[String]) extends Logging {
   var host = Utils.localHostName()
   var port = 0
   var webUiPort = 8081
@@ -39,9 +40,14 @@ private[spark] class WorkerArguments(args: Array[String]) {
   if (System.getenv("SPARK_WORKER_CORES") != null) {
     cores = System.getenv("SPARK_WORKER_CORES").toInt
   }
-  if (System.getenv("SPARK_WORKER_MEMORY") != null) {
+  if (System.getenv("SPARK_WORKER_MEM") != null) {
+    memory = Utils.memoryStringToMb(System.getenv("SPARK_WORKER_MEM"))
+  }
+  else if (System.getenv("SPARK_WORKER_MEMORY") != null) {
+    logWarning("SPARK_WORKER_MEMORY is deprecated, please use SPARK_WORKER_MEM instead")
     memory = Utils.memoryStringToMb(System.getenv("SPARK_WORKER_MEMORY"))
   }
+
   if (System.getenv("SPARK_WORKER_WEBUI_PORT") != null) {
     webUiPort = System.getenv("SPARK_WORKER_WEBUI_PORT").toInt
   }
