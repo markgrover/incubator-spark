@@ -140,6 +140,12 @@ class SparkContext(
       executorEnvs(key) = value
     }
   }
+
+  if (System.getenv("SPARK_MEM") != null) {
+    logWarning("SPARK_MEM environment variable has been removed. Please use spark.executor.memory system " +
+      "property instead.")
+  }
+
   // Since memory can be set with a system property too, use that
   executorEnvs("SPARK_MEM") = SparkContext.executorMemoryRequested + "m"
   if (environment != null) {
@@ -1078,11 +1084,10 @@ object SparkContext {
   /** Find the JAR that contains the class of a particular object */
   def jarOfObject(obj: AnyRef): Seq[String] = jarOfClass(obj.getClass)
 
-  /** Get the amount of memory per executor requested through system properties or SPARK_MEM */
+  /** Get the amount of memory per executor requested through system properties */
   private[spark] val executorMemoryRequested = {
     // TODO: Might need to add some extra memory for the non-heap parts of the JVM
     Option(System.getProperty("spark.executor.memory"))
-      .orElse(Option(System.getenv("SPARK_MEM")))
       .map(Utils.memoryStringToMb)
       .getOrElse(512)
   }

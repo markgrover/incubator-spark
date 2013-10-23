@@ -500,8 +500,8 @@ private[spark] object Utils extends Logging {
 
   /**
    * Convert a Java memory parameter passed to -Xmx (such as 300m or 1g) to a number of megabytes.
-   * This is used to figure out how much memory to claim from Mesos based on the SPARK_MEM
-   * environment variable.
+   * This is used to figure out how much memory to claim from Mesos based on the spark.executor.memory
+   * configuration variable
    */
   def memoryStringToMb(str: String): Int = {
     val lower = str.toLowerCase
