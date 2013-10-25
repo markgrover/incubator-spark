@@ -141,9 +141,10 @@ class SparkContext(
     }
   }
 
+  // TODO: Remove this once most of our users have understood that SPARK_MEM has gone for good
   if (System.getenv("SPARK_MEM") != null) {
-    logWarning("SPARK_MEM environment variable has been removed. Please use spark.executor.memory system " +
-      "property instead.")
+    logWarning("SPARK_MEM environment variable has been removed. Please use " +
+      "spark.executor.memory system property instead.")
   }
 
   // Since memory can be set with a system property too, use that
